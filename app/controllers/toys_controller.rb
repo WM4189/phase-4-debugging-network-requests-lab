@@ -2,30 +2,35 @@ class ToysController < ApplicationController
   wrap_parameters format: []
 
   def index
-    toys = Toy.all
-    render json: toys
+    render json: Toy.all
   end
 
   def create
-    toy = Toys.create(toy_params)
+    toy = Toy.create(toy_params)
     render json: toy, status: :created
   end
 
   def update
-    toy = Toy.find_by(id: params[:id])
+    toy = find_toy
     toy.update(toy_params)
+    render json: toy
   end
 
   def destroy
-    toy = Toy.find_by(id: params[:id])
+    toy = find_toy
     toy.destroy
-    head :no_content
+    render json: {}
+    # head :no_content
   end
 
   private
   
   def toy_params
     params.permit(:name, :image, :likes)
+  end
+
+  def find_toy
+    Toy.find_by(id: params[:id])
   end
 
 end
